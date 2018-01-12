@@ -1,0 +1,19 @@
+h1 {
+  text-align: center;
+  font-size: 60px;
+}
+
+#loginLinkOnIndex {
+  text-align: center;
+  margin-top: 70px;
+  font-size: 30px;
+}
+
+p {
+  text-align: center;
+  font-size: 30px;
+}
+
+#toDoImg {
+  margin-left: 680px;
+}
