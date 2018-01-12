@@ -34,12 +34,11 @@ p {
 
 #toDoLists {
   margin-bottom: 50px;
-  text-align: center;
   font-size: 40px;
 }
 
-.linksOnHome {
-  margin-left: 650px;
+#backToIndex {
+  margin-left: 290px;
   font-size: 30px;
 }
 
@@ -54,7 +53,7 @@ p {
 }
 
 #items {
-  margin-left: 500px;
+  margin-left: 100px;
   font-size: 35px;
 }
 
@@ -65,5 +64,10 @@ p {
 
 #logoutButtonOnToDoPage {
   margin-left: 880px;
+  font-size: 30px;
+}
+
+
+#newToDoLink {
   font-size: 30px;
 }

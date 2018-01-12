@@ -42,17 +42,29 @@ let provideHomePageToUser = function(req,res){
   res.end();
 }
 
+let toHtml = function(allToDoList){
+  return allToDoList.map((toDoList)=>{
+    return `<p>Title:${toDoList.Title},Description:${toDoList.Description},Item:${toDoList.Item}</p>`
+  })
+}
+
+let updateToDoListOnHomePage = function(toDoList){
+  let updatedToDoList = JSON.parse(toDoList);
+  let toDoListInHtml = toHtml(updatedToDoList).join('\n');
+  fs.writeFileSync('public/allToDoList.html',toDoListInHtml);
+}
 
 let getUpdatedToDoList = function(toDoList){
   let existingToDoList = fs.readFileSync('data/toDoList.json','utf8');
-  existingToDoList = JSON.parse(existingToDoList,null,2);
+  existingToDoList = JSON.parse(existingToDoList);
   existingToDoList.unshift(toDoList);
-  let updatedToDoList = JSON.stringify(existingToDoList);
+  let updatedToDoList = JSON.stringify(existingToDoList,null,2);
   return updatedToDoList;
 }
 
 let updateToDoListInFiles = function(allToDoList){
   fs.writeFileSync('data/toDoList.json',allToDoList);
+  updateToDoListOnHomePage(allToDoList);
 }
 
 let handleToDoList = function(toDoList){
@@ -62,7 +74,6 @@ let handleToDoList = function(toDoList){
 
 let passSubmittedDataToHandle = function(req,res){
   let toDoList = req.body;
-  // console.log(toDoList);
   handleToDoList(toDoList);
   res.end();
 }
@@ -83,7 +94,7 @@ app.post('/submitToDo',passSubmittedDataToHandle);
 app.use(serveFile);
 
 
-const PORT = 5000;
+const PORT = 8080;
 let server = http.createServer(app);
 server.on('error',e=>console.error('**error**',e.message));
 server.listen(PORT,(e)=>console.log(`server listening at ${PORT}`));

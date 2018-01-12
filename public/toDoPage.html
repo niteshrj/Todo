@@ -8,23 +8,10 @@
   <body>
     <h1> To-Do-List</h1>
     <form class="toDoForm" action="submitToDo" method="POST">
-      Title :- <input type="text" size="100" required ><br><br>
-      Description :- <input type="text" size="100" required ><br><br>
-    </form>
+      Title :- <input type="text" size="100" name="Title" value="" ><br><br>
+      Description :- <input type="text" size="100" name="Description" value="" ><br><br>
     <h2 id="items">Write down your items below :- </h2>
-    <form class="toDoForm" action="submitToDo" method="POST">
-      Item 1- <input type="text" size="100" required ><br><br>
-      Item 2- <input type="text" size="100" required ><br><br>
-      Item 3- <input type="text" size="100" required ><br><br>
-      Item 4- <input type="text" size="100" required ><br><br>
-      Item 5- <input type="text" size="100" required ><br><br>
-      Item 6- <input type="text" size="100" required ><br><br>
-      Item 7- <input type="text" size="100" required ><br><br>
-      Item 8- <input type="text" size="100" required ><br><br>
-      Item 9- <input type="text" size="100" required ><br><br>
-      Item 10- <input type="text" size="100" required ><br><br>
-    </form>
-    <form id="saveToDo" action="submitToDo" method="POST">
+      Item - <input type="text" size="100" name="Item" value="" ><br><br>
       <input type="submit" value="Save">
     </form>
     <form action="index.html" method="POST">
