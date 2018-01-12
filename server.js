@@ -1,7 +1,7 @@
 let fs = require('fs');
-const timeStamp = require('./time.js').timeStamp;
-const http = require('http');
-const WebApp = require('./webapp');
+let timeStamp = require('./time.js').timeStamp;
+let http = require('http');
+let WebApp = require('./webapp');
 let registered_users = [{userName:'aditi',name:'Aditi Lahare'},
 {userName:'pranali',name:'Pranali Lahare'}];
 let toS = o=>JSON.stringify(o,null,2);
@@ -37,6 +37,12 @@ let serveFile = function(req,res){
   }
 }
 
+let provideHomePageToUser = function(req,res){
+  let homePage = fs.readFileSync('./public/homePage.html');
+  res.write(homePage);
+  res.end();
+}
+
 let app = WebApp.create();
 
 app.use(logRequest);
@@ -45,6 +51,8 @@ app.use(loadUser);
 app.get('/',(req,res)=>{
   res.redirect('/index.html');
 });
+
+app.post('/loggedIn',provideHomePageToUser);
 
 app.use(serveFile);
 

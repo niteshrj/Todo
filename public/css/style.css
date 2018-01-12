@@ -23,6 +23,27 @@ p {
   margin-top: 50px;
 }
 
-h2 {
-  margin-left: 60px;
+
+#loginInfo {
+  margin-left: 50px;
+}
+
+#indexPageLink {
+  text-align: center;
+}
+
+#toDoLists {
+  margin-bottom: 500px;
+  text-align: center;
+  font-size: 40px;
+}
+
+.linksOnHome {
+  margin-left: 650px;
+  font-size: 30px;
+}
+
+.logoutButton {
+  margin-left: 770px;
+  font-size: 30px;
 }
