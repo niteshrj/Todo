@@ -33,7 +33,7 @@ p {
 }
 
 #toDoLists {
-  margin-bottom: 500px;
+  margin-bottom: 50px;
   text-align: center;
   font-size: 40px;
 }
@@ -43,7 +43,7 @@ p {
   font-size: 30px;
 }
 
-.logoutButton {
+#logoutButton {
   margin-left: 770px;
   font-size: 30px;
 }
@@ -56,4 +56,14 @@ p {
 #items {
   margin-left: 500px;
   font-size: 35px;
+}
+
+#saveToDo {
+  font-size: 0px;
+  margin-left: 800px;
+}
+
+#logoutButtonOnToDoPage {
+  margin-left: 880px;
+  font-size: 30px;
 }

@@ -50,7 +50,7 @@ const main = function(req,res){
   res.redirect = redirect.bind(res);
   req.urlIsOneOf = urlIsOneOf.bind(req);
   req.cookies = parseCookies(req.headers.cookie||'');
-  let content="";
+  let content = "";
   req.on('data',data=>content+=data.toString())
   req.on('end',()=>{
     req.body = parseBody(content);

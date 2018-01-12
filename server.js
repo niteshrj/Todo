@@ -14,9 +14,8 @@ let logRequest = (req,res)=>{
     `COOKIES=> ${toS(req.cookies)}`,
     `BODY=> ${toS(req.body)}`,''].join('\n');
   fs.appendFile('request.log',text,()=>{});
-
-  // console.log(`${req.method} ${req.url}`);
 }
+
 let loadUser = (req,res)=>{
   let sessionid = req.cookies.sessionid;
   let user = registered_users.find(u=>u.sessionid==sessionid);
@@ -43,6 +42,31 @@ let provideHomePageToUser = function(req,res){
   res.end();
 }
 
+
+let getUpdatedToDoList = function(toDoList){
+  let existingToDoList = fs.readFileSync('data/toDoList.json','utf8');
+  existingToDoList = JSON.parse(existingToDoList,null,2);
+  existingToDoList.unshift(toDoList);
+  let updatedToDoList = JSON.stringify(existingToDoList);
+  return updatedToDoList;
+}
+
+let updateToDoListInFiles = function(allToDoList){
+  fs.writeFileSync('data/toDoList.json',allToDoList);
+}
+
+let handleToDoList = function(toDoList){
+  let allToDoList = getUpdatedToDoList(toDoList);
+  updateToDoListInFiles(allToDoList);
+}
+
+let passSubmittedDataToHandle = function(req,res){
+  let toDoList = req.body;
+  // console.log(toDoList);
+  handleToDoList(toDoList);
+  res.end();
+}
+
 let app = WebApp.create();
 
 app.use(logRequest);
@@ -53,6 +77,8 @@ app.get('/',(req,res)=>{
 });
 
 app.post('/loggedIn',provideHomePageToUser);
+
+app.post('/submitToDo',passSubmittedDataToHandle);
 
 app.use(serveFile);
 
