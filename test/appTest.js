@@ -14,4 +14,13 @@ describe('app',()=>{
       })
     })
   })
+  describe('GET /',()=>{
+    it('redirects to index.html',done=>{
+      request(app,{method:'GET',url:'/'},(res)=>{
+        testHelper.should_be_redirected_to(res,'/index.html');
+        assert.equal(res.body,"");
+        done();
+      })
+    })
+  })
 })

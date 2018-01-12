@@ -47,3 +47,13 @@ p {
   margin-left: 770px;
   font-size: 30px;
 }
+
+.toDoForm {
+  margin-left: 500px;
+  font-size: 25px;
+}
+
+#items {
+  margin-left: 500px;
+  font-size: 35px;
+}
