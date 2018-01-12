@@ -37,14 +37,19 @@ let serveFile = function(req,res){
 }
 
 let provideHomePageToUser = function(req,res){
-  let homePage = fs.readFileSync('./public/homePage.html');
-  res.write(homePage);
-  res.end();
+  let user = registered_users.find(u=>u.userName==req.body.name);
+  if(user){
+    let homePage = fs.readFileSync('./public/homePage.html');
+    res.write(homePage);
+    res.end();
+    return;
+  }
+  res.redirect('/login.html');
 }
 
 let toHtml = function(allToDoList){
   return allToDoList.map((toDoList)=>{
-    return `<p>Title:${toDoList.Title},Description:${toDoList.Description},Item:${toDoList.Item}</p>`
+    return `<p>Title:${toDoList.Title}, Description:${toDoList.Description}, Item:${toDoList.Item}</p>`
   })
 }
 

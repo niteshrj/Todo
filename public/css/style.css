@@ -37,10 +37,6 @@ p {
   font-size: 40px;
 }
 
-#backToIndex {
-  margin-left: 290px;
-  font-size: 30px;
-}
 
 #logoutButton {
   margin-left: 770px;
@@ -67,7 +63,17 @@ p {
   font-size: 30px;
 }
 
-
 #newToDoLink {
   font-size: 30px;
+}
+
+#homePageFromToDo {
+  margin-left: 530px;
+  font-size: 20px;
+  color: black;
+}
+
+#existToDo {
+  width: 450px;
+  height: 400px;
 }
