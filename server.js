@@ -81,7 +81,7 @@ let handleToDoList = function(toDoList){
 let passSubmittedDataToHandle = function(req,res){
   let toDoList = req.body;
   console.log(toDoList);
-  handleToDoList(toDoList);
+  // handleToDoList(toDoList);
   res.redirect('/homePage.html');
 }
 
@@ -93,6 +93,7 @@ app.use(loadUser);
 app.get('/',(req,res)=>{
   res.redirect('/index.html');
 });
+
 
 app.post('/loggedIn',provideHomePageToUser);
 
