@@ -36,6 +36,7 @@ let serveFile = function(req,res){
   }
 }
 
+
 let provideHomePageToUser = function(req,res){
   let user = registered_users.find(u=>u.userName==req.body.name);
   let password = registered_users.find(u=>u.password==req.body.password);
@@ -48,69 +49,70 @@ let provideHomePageToUser = function(req,res){
   res.redirect('/login.html');
 }
 
-let getUpdatedToDoInJson = function(toDoList){
+
+let getUpdatedToDoInJson = function(currentToDoList){
   let existingToDoList = fs.readFileSync('./public/toDo.json','utf8');
   existingToDoList = JSON.parse(existingToDoList);
-  existingToDoList.unshift(toDoList);
+  existingToDoList.unshift(currentToDoList);
   let updatedToDoList = JSON.stringify(existingToDoList,null,2);
   return updatedToDoList;
 }
 
-let toHtml = function(allToDoList){
-  return allToDoList.map((toDoList)=>{
-    return `<a href='specificToDo'>${toDoList.Title}</a>`;
+
+let toHtml = function(updatedToDo){
+  return updatedToDo.map((currentToDoList)=>{
+    return `<a href='accessToDo'>${currentToDoList.Title}</a><br>`;
   })
 }
 
-let provideSpecificList = function(){
-  let specificToDo;
-  let toDoData = fs.readFileSync('public/toDo.json','utf8');
-  toDoData = JSON.parse(toDoData);
-  for(let index=0;index<toDoData.length;index++){
-    specificToDo = toDoData[index];
-  }
-  // console.log(specificToDo);
-  return specificToDo;
-}
 
-let updateToDoListOnHomePage = function(toDoList){
-  let updatedToDoList = JSON.parse(toDoList);
+let storeToDoInHtmlForm = function(currentToDoList){
+  let updatedToDoList = JSON.parse(currentToDoList);
   let toDoListInHtml = toHtml(updatedToDoList).join('\n');
   fs.writeFileSync('public/allToDoList.html',toDoListInHtml);
 }
 
 
-let updateToDoListInJsonFile = function(updatedToDoList){
+let writeAllToDoInFile = function(updatedToDoList){
   fs.writeFileSync('public/toDo.json',updatedToDoList);
 }
 
-let getUpdatedToDoList = function(toDoList){
+
+let getUpdatedToDoList = function(currentToDoList){
   let existingToDoList = fs.readFileSync('data/toDoList.json','utf8');
-  // console.log(existingToDoList);
   existingToDoList = JSON.parse(existingToDoList);
-  existingToDoList.unshift(toDoList);
+  existingToDoList.unshift(currentToDoList);
   let updatedToDoList = JSON.stringify(existingToDoList,null,2);
   return updatedToDoList;
 }
 
-let updateToDoListInFiles = function(allToDoList){
-  fs.writeFileSync('data/toDoList.json',allToDoList);
-  updateToDoListOnHomePage(allToDoList);
+
+let updateToDoListInFiles = function(updatedToDo){
+  fs.writeFileSync('data/toDoList.json',updatedToDo);
+  storeToDoInHtmlForm(updatedToDo);
 }
 
-let handleToDoList = function(toDoList){
-  let allToDoList = getUpdatedToDoList(toDoList);
-  let updatedToDoList = getUpdatedToDoInJson(toDoList);
-  updateToDoListInFiles(allToDoList);
-  updateToDoListInJsonFile(updatedToDoList);
+
+let handleToDoList = function(currentToDoList){
+  let updatedToDo = getUpdatedToDoList(currentToDoList);
+  let updatedToDoList = getUpdatedToDoInJson(currentToDoList);
+  updateToDoListInFiles(updatedToDo);
+  writeAllToDoInFile(updatedToDoList);
 }
+
 
 let passSubmittedDataToHandle = function(req,res){
-  let toDoList = req.body;
-  // console.log(toDoList);
-  handleToDoList(toDoList);
+  let currentToDoList = req.body;
+  handleToDoList(currentToDoList);
   res.redirect('/homePage.html');
 }
+
+
+// let provideParticularToDo = function(req,res){
+//   let listBook = fs.readFileSync('toDo.json','utf8');
+//
+// }
+
 
 let app = WebApp.create();
 
@@ -126,7 +128,7 @@ app.post('/loggedIn',provideHomePageToUser);
 
 app.post('/submitToDo',passSubmittedDataToHandle);
 
-app.get('/specificToDo',provideSpecificList);
+// app.get('/accessToDo',provideParticularToDo);
 
 app.use(serveFile);
 
