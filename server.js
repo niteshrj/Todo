@@ -41,7 +41,7 @@ let provideHomePageToUser = function(req,res){
   let user = registered_users.find(u=>u.userName==req.body.name);
   let password = registered_users.find(u=>u.password==req.body.password);
   if(user && password){
-    let homePage = fs.readFileSync('./public/homePage.html');
+    let homePage = fs.readFileSync('./public/homePage.html','utf8');
     res.write(homePage);
     res.end();
     return;
@@ -61,7 +61,8 @@ let getUpdatedToDoInJson = function(currentToDoList){
 
 let toHtml = function(updatedToDo){
   return updatedToDo.map((currentToDoList)=>{
-    return `<a href='accessToDo'>${currentToDoList.Title}</a><br>`;
+    return `<a id='${currentToDoList.Title}' href='${currentToDoList.Title}'>
+    ${currentToDoList.Title}</a><br>`;
   })
 }
 
@@ -107,12 +108,11 @@ let passSubmittedDataToHandle = function(req,res){
   res.redirect('/homePage.html');
 }
 
-
-// let provideParticularToDo = function(req,res){
-//   let listBook = fs.readFileSync('toDo.json','utf8');
-//
-// }
-
+let provideAllToDo = function(req,res){
+  let toDoBook = fs.readFileSync('./public/toDo.json','utf8');
+  res.write(toDoBook);
+  res.end();
+}
 
 let app = WebApp.create();
 
@@ -128,10 +128,9 @@ app.post('/loggedIn',provideHomePageToUser);
 
 app.post('/submitToDo',passSubmittedDataToHandle);
 
-// app.get('/accessToDo',provideParticularToDo);
+app.get('/getAllToDo',provideAllToDo);
 
 app.use(serveFile);
-
 
 const PORT = 8080;
 let server = http.createServer(app);
