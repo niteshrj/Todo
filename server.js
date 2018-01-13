@@ -2,8 +2,8 @@ let fs = require('fs');
 let timeStamp = require('./time.js').timeStamp;
 let http = require('http');
 let WebApp = require('./webapp');
-let registered_users = [{userName:'aditi',name:'Aditi Lahare'},
-{userName:'pranali',name:'Pranali Lahare'}];
+let registered_users = [{userName:'aditi',password:'aditi'},
+{userName:'pranali',password:'pranali'}];
 let toS = o=>JSON.stringify(o,null,2);
 
 let logRequest = (req,res)=>{
@@ -38,7 +38,8 @@ let serveFile = function(req,res){
 
 let provideHomePageToUser = function(req,res){
   let user = registered_users.find(u=>u.userName==req.body.name);
-  if(user){
+  let password = registered_users.find(u=>u.password==req.body.password);
+  if(user && password){
     let homePage = fs.readFileSync('./public/homePage.html');
     res.write(homePage);
     res.end();
@@ -79,8 +80,9 @@ let handleToDoList = function(toDoList){
 
 let passSubmittedDataToHandle = function(req,res){
   let toDoList = req.body;
+  console.log(toDoList);
   handleToDoList(toDoList);
-  res.end();
+  res.redirect('/homePage.html');
 }
 
 let app = WebApp.create();
