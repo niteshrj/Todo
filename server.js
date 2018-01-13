@@ -8,11 +8,11 @@ let toS = o=>JSON.stringify(o,null,2);
 
 let logRequest = (req,res)=>{
   let text = ['------------------------------',
-    `${timeStamp()}`,
-    `${req.method} ${req.url}`,
-    `HEADERS=> ${toS(req.headers)}`,
-    `COOKIES=> ${toS(req.cookies)}`,
-    `BODY=> ${toS(req.body)}`,''].join('\n');
+  `${timeStamp()}`,
+  `${req.method} ${req.url}`,
+  `HEADERS=> ${toS(req.headers)}`,
+  `COOKIES=> ${toS(req.cookies)}`,
+  `BODY=> ${toS(req.body)}`,''].join('\n');
   fs.appendFile('request.log',text,()=>{});
 }
 
@@ -48,10 +48,29 @@ let provideHomePageToUser = function(req,res){
   res.redirect('/login.html');
 }
 
+let getUpdatedToDoInJson = function(toDoList){
+  let existingToDoList = fs.readFileSync('./public/toDo.json','utf8');
+  existingToDoList = JSON.parse(existingToDoList);
+  existingToDoList.unshift(toDoList);
+  let updatedToDoList = JSON.stringify(existingToDoList,null,2);
+  return updatedToDoList;
+}
+
 let toHtml = function(allToDoList){
   return allToDoList.map((toDoList)=>{
-    return `<p>Title:${toDoList.Title}, Description:${toDoList.Description}, Item:${toDoList.Item}</p>`
+    return `<a href='specificToDo'>${toDoList.Title}</a>`;
   })
+}
+
+let provideSpecificList = function(){
+  let specificToDo;
+  let toDoData = fs.readFileSync('public/toDo.json','utf8');
+  toDoData = JSON.parse(toDoData);
+  for(let index=0;index<toDoData.length;index++){
+    specificToDo = toDoData[index];
+  }
+  // console.log(specificToDo);
+  return specificToDo;
 }
 
 let updateToDoListOnHomePage = function(toDoList){
@@ -60,8 +79,14 @@ let updateToDoListOnHomePage = function(toDoList){
   fs.writeFileSync('public/allToDoList.html',toDoListInHtml);
 }
 
+
+let updateToDoListInJsonFile = function(updatedToDoList){
+  fs.writeFileSync('public/toDo.json',updatedToDoList);
+}
+
 let getUpdatedToDoList = function(toDoList){
   let existingToDoList = fs.readFileSync('data/toDoList.json','utf8');
+  // console.log(existingToDoList);
   existingToDoList = JSON.parse(existingToDoList);
   existingToDoList.unshift(toDoList);
   let updatedToDoList = JSON.stringify(existingToDoList,null,2);
@@ -75,13 +100,15 @@ let updateToDoListInFiles = function(allToDoList){
 
 let handleToDoList = function(toDoList){
   let allToDoList = getUpdatedToDoList(toDoList);
+  let updatedToDoList = getUpdatedToDoInJson(toDoList);
   updateToDoListInFiles(allToDoList);
+  updateToDoListInJsonFile(updatedToDoList);
 }
 
 let passSubmittedDataToHandle = function(req,res){
   let toDoList = req.body;
-  console.log(toDoList);
-  // handleToDoList(toDoList);
+  // console.log(toDoList);
+  handleToDoList(toDoList);
   res.redirect('/homePage.html');
 }
 
@@ -98,6 +125,8 @@ app.get('/',(req,res)=>{
 app.post('/loggedIn',provideHomePageToUser);
 
 app.post('/submitToDo',passSubmittedDataToHandle);
+
+app.get('/specificToDo',provideSpecificList);
 
 app.use(serveFile);
 
