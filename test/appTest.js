@@ -59,4 +59,12 @@ describe('app',()=>{
       })
     })
   })
+  describe('GET /getAllToDo',()=>{
+    it('it should show the all ToDo of the user',done=>{
+      request(app,{method:'GET',url:'/getAllToDo'},(res)=>{
+        testHelper.status_is_ok(res);
+        done();
+      })
+    })
+  })
 })
