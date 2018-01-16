@@ -1,23 +1,23 @@
 let ToDoList = require('./toDoList.js');
 
 class User {
-  constructor(userName,userPassword) {
-    this.userName = userName;
-    this.userPassword = userPassword;
-    this.allToDo = [];
+  constructor(name,password) {
+    this.name = name;
+    this.password = password;
+    this.allToDos = [];
   }
-  getUserName(){
-    return this.userName;
+  getName(){
+    return this.name;
   }
-  getUserPassword(){
-    return this.userPassword;
+  getPassword(){
+    return this.password;
   }
   getAllToDo(){
-    return this.allToDo;
+    return this.allToDos;
   }
   addNewToDo(title,description){
     let newToDo = new ToDoList(title,description);
-    this.allToDo.push(newToDo);
+    this.allToDos.push(newToDo);
   }
 }
 

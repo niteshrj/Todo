@@ -25,12 +25,28 @@ class ToDoList {
   getItems(){
     return this.items;
   }
-  addItem(itemTitle){
+  addItem(objective){
     this.counter++;
-    this.items[`Item${this.counter}`] = new ToDoItem(itemTitle);
+    this.items[`Item${this.counter}`] = new ToDoItem(objective);
   }
-  removesItem(itemTitle){
-    delete this.items[itemTitle];
+  removesItem(itemNo){
+    this.counter--;
+    delete this.items[itemNo];
+  }
+  getObjectiveOfItem(itemNo){
+    return this.items[itemNo].objective;
+  }
+  getStatusOfItem(itemNo){
+    return this.items[itemNo].status;
+  }
+  updateItemObjective(itemNo,newObjective){
+    this.items[itemNo].objective = newObjective;
+  }
+  markItemDone(itemNo){
+    this.items[itemNo].status = true;
+  }
+  markItemNotDone(itemNo){
+    this.items[itemNo].status = false;
   }
 }
 
