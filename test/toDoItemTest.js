@@ -25,7 +25,7 @@ describe('ToDoItem',()=>{
       toDoItem.markAsDone();
       assert.equal(toDoItem.getStatus(),true);
     })
-    it('markAsUn() should change the status of item',()=>{
+    it('markAsUndone() should change the status of item',()=>{
       let toDoItem = new ToDoItem('study','regarding maths');
       toDoItem.markAsUndone();
       assert.equal(toDoItem.getStatus(),false);
