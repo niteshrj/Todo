@@ -2,7 +2,7 @@ let chai = require('chai');
 let assert = chai.assert;
 let request = require('./requestSimulator.js');
 let testHelper = require('./testHelper.js');
-let app = require('../server.js');
+let app = require('../app.js');
 
 
 describe('app',()=>{
