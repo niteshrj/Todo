@@ -1,4 +1,4 @@
-class ToDoItem {
+class TodoItem {
   constructor(objective) {
     this.objective = objective;
     this.status = false;
@@ -20,4 +20,4 @@ class ToDoItem {
   }
 }
 
-module.exports = ToDoItem;
+module.exports = TodoItem;

@@ -1,11 +1,11 @@
 let assert = require('chai').assert;
-let ToDoList = require('../src/toDoList.js');
+let TodoList = require('../src/toDoList.js');
 var toDoList;
 
-describe('ToDoList',()=>{
+describe('TodoList',()=>{
 
   beforeEach(function(){
-    toDoList = new ToDoList('study','regarding science');
+    toDoList = new TodoList('study','regarding science');
   })
 
   describe('getTitle',()=>{

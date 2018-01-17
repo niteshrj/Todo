@@ -1,6 +1,6 @@
 let ToDoItem = require('./toDoItem.js');
 
-class ToDoList {
+class TodoList {
   constructor(title,description) {
     this.title = title;
     this.description = description;
@@ -50,4 +50,4 @@ class ToDoList {
   }
 }
 
-module.exports = ToDoList;
+module.exports = TodoList;

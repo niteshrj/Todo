@@ -1,26 +1,21 @@
 let User = require('./user.js');
 
-class ToDoApp {
+class TodoApp {
   constructor() {
     this.allUsers = {};
-    this.userId = 0;
-    this.noOfUsers = 0;
   }
-  getAllUser(){
+  getAllUsers(){
     return this.allUsers;
   }
   addNewUser(name,password){
-    this.noOfUsers++;
-    this.userId++;
-    this.allUsers[`User${this.userId}`] = new User(name,password);
+    this.allUsers[name] = new User(name,password);
   }
-  deleteUser(userId){
-    this.noOfUsers--;
-    delete this.allUsers[userId];
+  deleteUser(name){
+    delete this.allUsers[name];
   }
-  getNoOfUser(){
-    return this.noOfUsers;
+  getNoOfUsers(){
+    return Object.keys(this.allUsers).length;
   }
 }
 
-module.exports = ToDoApp;
+module.exports = TodoApp;

@@ -22,7 +22,10 @@ class User {
   addNewToDo(title,description){
     let newToDo = new ToDoList(title,description);
     this.counter++;
-    this.toDos[`ToDo${this.counter}`] = newToDo;
+    this.toDos[title] = newToDo;
+  }
+  removeToDo(listId){
+    return delete this.toDos[listId];
   }
   getTitleOfList(listId){
     return this.toDos[listId].getTitle();

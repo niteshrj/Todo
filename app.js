@@ -1,9 +1,12 @@
 let fs = require('fs');
 let timeStamp = require('./time.js').timeStamp;
 let WebApp = require('./webapp.js');
-let registered_users = [{userName:'aditi',password:'aditi'},
-{userName:'pranali',password:'pranali'}];
+let registered_users = [{userName:'aditi',password:'adu'}];
 let toS = o=>JSON.stringify(o,null,2);
+let User = require('./src/user.js');
+
+
+let user = new User('aditi','adu');
 
 let logRequest = (req,res)=>{
   let text = ['------------------------------',
@@ -24,111 +27,50 @@ let loadUser = (req,res)=>{
 };
 
 
-let serveFile = function(req,res){
-  let fileName = `public${req.url}`;
-  try {
-    let fileContent = fs.readFileSync(fileName);
-    res.write(fileContent);
+let getContentType = (req)=>{
+  let extension = req.url.slice(req.url.lastIndexOf('.'));
+  let contentTypes = {
+    ".jpg" : "img/jpg",
+    ".txt" : "text/txt",
+    ".html" : "text/html",
+    ".css" : "text/css",
+    ".pdf" : "application/pdf",
+    ".gif" : "img/gif",
+    ".js" : "text/javascript"
+  };
+  return contentTypes[extension];
+};
+
+let readFile = function(filePath){
+  return fs.readFileSync(filePath,'utf8');
+}
+
+let isFile = function(filePath){
+  return fs.statSync(filePath).isFile();
+}
+
+
+let serveStaticFiles = function(req,res){
+  let filePath = req.url;
+  if(filePath=='/'){
+    res.redirect('/login.html');
+  }
+  filePath = './public'+req.url;
+  if(isFile(filePath)){
+    let content = readFile(filePath);
+    res.setHeader('Content-type',`${getContentType(req)}`);
+    res.write(content);
     res.end();
-  } catch (e) {
     return;
   }
 }
 
-
-let provideHomePageToUser = function(req,res){
-  let user = registered_users.find(u=>u.userName==req.body.name);
-  let password = registered_users.find(u=>u.password==req.body.password);
-  if(user && password){
-    let homePage = fs.readFileSync('./public/homePage.html','utf8');
-    res.write(homePage);
-    res.end();
-    return;
-  }
-  res.redirect('/login.html');
-}
-
-
-let getUpdatedToDoInJson = function(currentToDoList){
-  let existingToDoList = fs.readFileSync('./public/toDo.json','utf8');
-  existingToDoList = JSON.parse(existingToDoList);
-  existingToDoList.unshift(currentToDoList);
-  let updatedToDoList = JSON.stringify(existingToDoList,null,2);
-  return updatedToDoList;
-}
-
-
-let toHtml = function(updatedToDo){
-  return updatedToDo.map((currentToDoList)=>{
-    return `<a id='${currentToDoList.Title}' href='${currentToDoList.Title}'>
-    ${currentToDoList.Title}</a><br>`;
-  })
-}
-
-
-let storeToDoInHtmlForm = function(currentToDoList){
-  let updatedToDoList = JSON.parse(currentToDoList);
-  let toDoListInHtml = toHtml(updatedToDoList).join('\n');
-  fs.writeFileSync('public/allToDoList.html',toDoListInHtml);
-}
-
-
-let writeAllToDoInFile = function(updatedToDoList){
-  fs.writeFileSync('public/toDo.json',updatedToDoList);
-}
-
-
-let getUpdatedToDoList = function(currentToDoList){
-  let existingToDoList = fs.readFileSync('data/toDoList.json','utf8');
-  existingToDoList = JSON.parse(existingToDoList);
-  existingToDoList.unshift(currentToDoList);
-  let updatedToDoList = JSON.stringify(existingToDoList,null,2);
-  return updatedToDoList;
-}
-
-
-let updateToDoListInFiles = function(updatedToDo){
-  fs.writeFileSync('data/toDoList.json',updatedToDo);
-  storeToDoInHtmlForm(updatedToDo);
-}
-
-
-let handleToDoList = function(currentToDoList){
-  let updatedToDo = getUpdatedToDoList(currentToDoList);
-  let updatedToDoList = getUpdatedToDoInJson(currentToDoList);
-  updateToDoListInFiles(updatedToDo);
-  writeAllToDoInFile(updatedToDoList);
-}
-
-
-let passSubmittedDataToHandle = function(req,res){
-  let currentToDoList = req.body;
-  handleToDoList(currentToDoList);
-  res.redirect('/homePage.html');
-}
-
-let provideAllToDo = function(req,res){
-  let toDoBook = fs.readFileSync('./public/toDo.json','utf8');
-  res.write(toDoBook);
-  res.end();
-}
 
 let app = WebApp.create();
 
 app.use(logRequest);
 app.use(loadUser);
 
-app.get('/',(req,res)=>{
-  res.redirect('/index.html');
-});
-
-
-app.post('/loggedIn',provideHomePageToUser);
-
-app.post('/submitToDo',passSubmittedDataToHandle);
-
-app.get('/getAllToDo',provideAllToDo);
-
-app.use(serveFile);
+app.use(serveStaticFiles);
 
 module.exports = app;

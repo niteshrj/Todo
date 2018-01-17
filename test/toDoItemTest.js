@@ -1,11 +1,11 @@
 let assert = require('chai').assert;
-let ToDoItem = require('../src/toDoItem.js');
+let TodoItem = require('../src/toDoItem.js');
 let toDoItem;
 
-describe('ToDoItem',()=>{
+describe('TodoItem',()=>{
 
   beforeEach(function(){
-    toDoItem = new ToDoItem('study','regarding maths');
+    toDoItem = new TodoItem('study','regarding maths');
   })
 
   describe('getObjective',()=>{
