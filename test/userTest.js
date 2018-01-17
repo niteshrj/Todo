@@ -4,7 +4,7 @@ let user;
 
 describe('User',()=>{
 
-  beforeEach(function () {
+  beforeEach(function(){
     user = new User('aditi','aditi123');
   })
 
@@ -84,18 +84,6 @@ describe('User',()=>{
     })
   })
 
-  describe('changeDescriptionOfList',()=>{
-    it('Should change description of any particular list',()=>{
-      user.addNewToDo('cricket','to play');
-      user.addNewToDo('study','practice');
-      assert.deepEqual(user.getAllToDo(),{
-        'ToDo1':{'title':'cricket','description':'to play','counter':0,'items':{}},
-        'ToDo2':{'title':'study','description':'practice','counter':0,'items':{}}
-      })
-      user.changeDescriptionOfList('ToDo1','to fun');
-      assert.deepEqual(user.getDescriptionOfList('ToDo1'),'to fun');
-    })
-  })
   describe('getCounterOfList',()=>{
     it('Should return counter of any particular list',()=>{
       user.addNewToDo('cricket','to play');
