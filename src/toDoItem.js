@@ -7,8 +7,7 @@ class ToDoItem {
     return this.objective;
   }
   changeObjective(newObjective){
-    this.objective = newObjective;
-    return this.objective;
+    return this.objective = newObjective;
   }
   getStatus(){
     return this.status;
