@@ -5,16 +5,16 @@ class PostLoginHandler extends DefaultHandler{
     super()
   }
   execute(req,res){
-    let validUser = this.user.registered_users.find((u)=>
-    {u.userName==req.body.username});
-    if(!validUser){
-      res.setHeader('Set-Cookie','loginFailed=true');
-      res.redirect('/login');
+    let validUser = this.registered_users.find((u)=>u.userName==req.body.name);
+    let validPassword = this.registered_users.find((u)=>u.password==req.body.password);
+    if(!validUser || !validPassword){
+      res.setHeader('Set-Cookie',`message=login Failed ; Max-Age=5`);
+      res.redirect('/login.html');
       return;
     }
     let sessionid = new Date().getTime();
     res.setHeader('Set-Cookie',`sessionid=${sessionid}`);
-    user.sessionid = sessionid;
+    validUser.sessionid = sessionid;
     res.redirect('/homePage.html');
   }
 }
