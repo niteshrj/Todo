@@ -7,11 +7,13 @@ let CompositeHandler = require('./handlers/compositeHandler.js');
 let StaticFileHandler = require('./handlers/staticFileHandler.js');
 let PostLoginHandler = require('./handlers/postLoginHandler.js');
 let PostLogoutHandler = require('./handlers/postLogoutHandler.js');
+let PostSubmitToDoHandler = require('./handlers/postSubmitToDoHandler.js');
 
 let compositeHandler = new CompositeHandler();
 let staticFileHandler = new StaticFileHandler('public');
 let postLoginHandler = new PostLoginHandler();
 let postLogoutHandler = new PostLogoutHandler();
+let postSubmitToDoHandler = new PostSubmitToDoHandler();
 
 compositeHandler.addHandler(staticFileHandler);
 
@@ -41,5 +43,7 @@ app.use(compositeHandler.getRequestHandler());
 app.post('/loggedIn',postLoginHandler.getRequestHandler());
 
 app.post('/logout',postLogoutHandler.getRequestHandler());
+
+app.post('/submitToDo',postSubmitToDoHandler.getRequestHandler());
 
 module.exports = app;
