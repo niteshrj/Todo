@@ -8,6 +8,7 @@ class PostSubmitToDoHandler extends DefaultHandler{
   execute(req,res){
     let currentToDo = req.body;
     this.handleToDo(currentToDo);
+    let titles = this.viewTitles(req,res);
   }
   handleToDo(currentToDo){
     let updatedToDo = this.getUpdatedToDo(currentToDo);
@@ -23,8 +24,11 @@ class PostSubmitToDoHandler extends DefaultHandler{
   restoredUpdatedToDo(updatedToDo){
     fs.writeFileSync('./data/toDoList.json',updatedToDo);
   }
-  viewToDo(req,res){
+  viewTitles(req,res){
     let toDos = fs.readFileSync('./data/toDoList.json','utf8');
+    toDos = JSON.parse(toDos);
+    let titles = toDos.map((u)=>u.Title);
+    return titles;
   }
 }
 

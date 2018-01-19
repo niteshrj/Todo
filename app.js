@@ -40,10 +40,10 @@ app.use(loadUser);
 
 app.use(compositeHandler.getRequestHandler());
 
-app.post('/loggedIn',postLoginHandler.getRequestHandler());
+app.post('/logIn',postLoginHandler.getRequestHandler());
 
 app.post('/logout',postLogoutHandler.getRequestHandler());
 
-app.post('/submitToDo',postSubmitToDoHandler.getRequestHandler());
+app.post('/toDo',postSubmitToDoHandler.getRequestHandler());
 
 module.exports = app;

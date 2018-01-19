@@ -29,14 +29,16 @@ class StaticFileHandler extends DefaultHandler{
     if(req.url=='/'||req.url=='/login'){
       req.url = '/login.html';
     }
-    try {
-    data = fs.readFileSync(this.getFilePath(req.url),'utf8');
-    } catch (e) {
-      return;
+    if(!res.finished){
+      try {
+        data = fs.readFileSync(this.getFilePath(req.url),'utf8');
+      } catch (e) {
+        return;
+      }
+      res.setHeader('Content-Type',this.getContentType(req.url));
+      res.write(data);
+      res.end();
     }
-    res.setHeader('Content-Type',this.getContentType(req.url));
-    res.write(data);
-    res.end();
   }
 }
 

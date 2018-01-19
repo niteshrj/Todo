@@ -10,6 +10,7 @@ let logRequest = (req,res)=>{
   `COOKIES=> ${toS(req.cookies)}`,
   `BODY=> ${toS(req.body)}`,''].join('\n');
   fs.appendFile('request.log',text,()=>{});
+  console.log(`${req.method} ${req.url}`);
 }
 
 
