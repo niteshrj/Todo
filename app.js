@@ -1,19 +1,15 @@
 let fs = require('fs');
 let WebApp = require('./webapp.js');;
 let appUtility = require('./appUtility.js');
-let registered_users = [{'userName':'aditi','password':'aditi123'}];
+let registered_users = [{'userName':'a','password':'1'}];
 
 let CompositeHandler = require('./handlers/compositeHandler.js');
 let StaticFileHandler = require('./handlers/staticFileHandler.js');
-let PostLoginHandler = require('./handlers/postLoginHandler.js');
 let PostLogoutHandler = require('./handlers/postLogoutHandler.js');
-let PostSubmitToDoHandler = require('./handlers/postSubmitToDoHandler.js');
 
 let compositeHandler = new CompositeHandler();
 let staticFileHandler = new StaticFileHandler('public');
-let postLoginHandler = new PostLoginHandler();
 let postLogoutHandler = new PostLogoutHandler();
-let postSubmitToDoHandler = new PostSubmitToDoHandler();
 
 compositeHandler.addHandler(staticFileHandler);
 
@@ -32,23 +28,40 @@ let isFile = appUtility.isFile;
 let loadUser = (req,res)=>{
   let sessionid = req.cookies.sessionid;
   let user = registered_users.find(u=>u.sessionid==sessionid);
+  console.log(`sessionid - ${sessionid}`);
+  console.log(`user - ${user}`);
   if(sessionid && user){
     req.user = user;
   }
 };
 
+const postLoginAction = function(req,res){
+  let validUser = registered_users.find((u)=>u.userName==req.body.name);
+  let validPassword = registered_users.find((u)=>u.password==req.body.password);
+  console.log(validUser);
+  console.log(validPassword);
+  if(!validUser || !validPassword){
+    res.setHeader('Set-Cookie',`message=login Failed ; Max-Age=5`);
+    res.redirect('/login.html');
+    return;
+  }
+  let sessionid = new Date().getTime();
+  res.setHeader('Set-Cookie',`sessionid=${sessionid}`);
+  validUser.sessionid = sessionid;
+  console.log(validUser);
+  res.redirect('/homePage.html');
+}
+
 let app = WebApp.create();
-app.use(redirectLoggedInUserToHome);
-app.use(redirectLoggedOutUserToLogin);
 app.use(logRequest);
 app.use(loadUser);
+app.use(redirectLoggedInUserToHome);
+app.use(redirectLoggedOutUserToLogin);
 
 app.use(compositeHandler.getRequestHandler());
 
-app.post('/logIn',postLoginHandler.getRequestHandler());
+app.post('/login',postLoginAction);
 
 app.post('/logout',postLogoutHandler.getRequestHandler());
-
-app.post('/toDo',postSubmitToDoHandler.getRequestHandler());
 
 module.exports = app;
