@@ -1,6 +1,5 @@
-const callback = function(){
-  let text = this.responseText;
-  console.log(text);
+const callback = function(data){
+  let text = this.responseText || data;
   text = JSON.parse(text);
   text.forEach((ele)=>{
     let link = document.createElement('a');
