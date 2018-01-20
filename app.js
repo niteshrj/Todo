@@ -1,7 +1,7 @@
 let fs = require('fs');
 let WebApp = require('./webapp.js');;
 let appUtility = require('./appUtility.js');
-let registered_users = [{'userName':'Aditi','password':'1'}];
+let registered_users = [{'userName':'Aditi','password':'1'},{'userName':'Nitesh','password':'2'}];
 let CompositeHandler = require('./handlers/compositeHandler.js');
 let StaticFileHandler = require('./handlers/staticFileHandler.js');
 let PostLogoutHandler = require('./handlers/postLogoutHandler.js');
@@ -53,7 +53,6 @@ const getUserName = function(req){
   return userName;
 }
 const writeToFile = function(data,todo,userName){
-  // let parsedData = JSON.parse(data);
   let parsedData = data;
   parsedData[userName].push(todo);
   console.log(parsedData);

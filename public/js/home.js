@@ -1,12 +1,15 @@
 const callback = function(data){
   let text = this.responseText || data;
   text = JSON.parse(text);
-  text.forEach((ele)=>{
-    let link = document.createElement('a');
+  text.forEach((todo)=>{
+    let title = document.createElement('a');
+    let description = document.createElement('p');
     let br = document.createElement('br');
-    link.setAttribute('href','https://www.google.com');
-    link.innerText = ele.title;
-    document.getElementById('div').appendChild(link);
+    title.setAttribute('href','https://www.google.com');
+    title.innerText = todo.title;
+    description.innerText = todo.description;
+    document.getElementById('div').appendChild(title);
+    document.getElementById('div').appendChild(description);
     document.getElementById('div').appendChild(br);
   })
 }

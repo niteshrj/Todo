@@ -23,15 +23,6 @@ describe('app',()=>{
       })
     })
   })
-  describe('GET /index.html',()=>{
-    it('it should show the index page',done=>{
-      request(app,{method:'GET',url:'/index.html'},(res)=>{
-        testHelper.status_is_ok(res);
-        testHelper.body_contains(res,'TO-DO-LIST');
-        done();
-      })
-    })
-  })
   describe('GET /login.html',()=>{
     it('it should show the login page',done=>{
       request(app,{method:'GET',url:'/login.html'},(res)=>{
