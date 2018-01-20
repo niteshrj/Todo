@@ -7,7 +7,7 @@ class PostLogoutHandler extends DefaultHandler{
   execute(req,res){
     res.setHeader('Set-Cookie', [`sessionid=0`]);
     if (req.user) delete req.user.sessionid;
-    res.redirect('./index.html');
+    res.redirect('./login.html');
     res.end();
   }
 }
