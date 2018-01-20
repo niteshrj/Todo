@@ -17,7 +17,12 @@ let postSubmitToDoHandler = new PostSubmitToDoHandler();
 
 compositeHandler.addHandler(staticFileHandler);
 
-
+const redirectLoggedInUserToHome = (req,res)=>{
+  if(req.urlIsOneOf(['/','/login.html']) && req.user) res.redirect('/homePage.html');
+}
+const redirectLoggedOutUserToLogin = (req,res)=>{
+  if(req.urlIsOneOf(['/','/homePage.html','/logout']) && !req.user) res.redirect('/login.html');
+}
 let logRequest = appUtility.logRequest;
 let getContentType = appUtility.getContentType;
 let readFile = appUtility.readFile;
@@ -32,9 +37,9 @@ let loadUser = (req,res)=>{
   }
 };
 
-
 let app = WebApp.create();
-
+app.use(redirectLoggedInUserToHome);
+app.use(redirectLoggedOutUserToLogin);
 app.use(logRequest);
 app.use(loadUser);
 

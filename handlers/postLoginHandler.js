@@ -1,10 +1,9 @@
 let DefaultHandler = require('./defaultHandler.js');
-let registered_users = [{'userName':'aditi','password':11}];
 
 class PostLoginHandler extends DefaultHandler{
   constructor() {
-    super()
-    this.registered_users = registered_users;
+    super();
+    this.registered_users = [{'userName':'aditi','password':11}];
   }
   execute(req,res){
     let validUser = this.registered_users.find((u)=>u.userName==req.body.name);
