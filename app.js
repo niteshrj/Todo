@@ -1,7 +1,7 @@
 let fs = require('fs');
 let WebApp = require('./webapp.js');;
 let appUtility = require('./appUtility.js');
-let registered_users = [{'userName':'a','password':'1'}];
+let registered_users = [{'userName':'Aditi','password':'1'}];
 let CompositeHandler = require('./handlers/compositeHandler.js');
 let StaticFileHandler = require('./handlers/staticFileHandler.js');
 let PostLogoutHandler = require('./handlers/postLogoutHandler.js');
@@ -46,22 +46,39 @@ const postLoginAction = function(req,res){
   res.redirect('/home.html');
 }
 
+const getUserName = function(req){
+  let sessionid = req.cookies.sessionid;
+  let user = registered_users.find(u=>u.sessionid==sessionid);
+  let userName = user['userName'];
+  return userName;
+}
+const writeToFile = function(data,todo,userName){
+  // let parsedData = JSON.parse(data);
+  let parsedData = data;
+  parsedData[userName].push(todo);
+  console.log(parsedData);
+  parsedData = JSON.stringify(parsedData,null,2);
+  fs.writeFileSync('./data/data.json',parsedData);
+  data = fs.readFileSync('./data/data.json','utf8');
+  return data;
+}
+
 const onDataRequest = function(req,res){
+  let userName = getUserName(req);
   let todo = req.body;
   let title = todo['title'];
   let description = todo['description'];
   let data = fs.readFileSync('./data/data.json','utf8');
+  data = JSON.parse(data);
+  let userTodo = data[userName];
+  userTodo = JSON.stringify(userTodo);
   if(title!='' && description!=''){
-    parsedData = JSON.parse(data);
-    parsedData.push(todo);
-    parsedData = JSON.stringify(parsedData,null,2);
-    fs.writeFileSync('./data/data.json',parsedData);
-    data = fs.readFileSync('./data/data.json','utf8');
-    res.write(data);
+    writeToFile(data,todo,userName);
+    res.write(userTodo);
     res.end();
     return;
   }
-  res.write(data);
+  res.write(userTodo);
   res.end();
 }
 
