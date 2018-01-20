@@ -55,7 +55,6 @@ const getUserName = function(req){
 const writeToFile = function(data,todo,userName){
   let parsedData = data;
   parsedData[userName].push(todo);
-  console.log(parsedData);
   parsedData = JSON.stringify(parsedData,null,2);
   fs.writeFileSync('./data/data.json',parsedData);
   data = fs.readFileSync('./data/data.json','utf8');
@@ -81,6 +80,16 @@ const onDataRequest = function(req,res){
   res.end();
 }
 
+const onDelete = function(req,res){
+  let todoIndex = req.body.id;
+  let userName = getUserName(req);
+  let data = fs.readFileSync('./data/data.json','utf8');
+  data = JSON.parse(data);
+  data[userName].splice(todoIndex,1);
+  data = JSON.stringify(data,null,2);
+  fs.writeFileSync('./data/data.json',data);
+}
+
 let app = WebApp.create();
 app.use(logRequest);
 app.use(loadUser);
@@ -90,6 +99,7 @@ app.use(redirectLoggedOutUserToLogin);
 app.use(compositeHandler.getRequestHandler());
 app.post('/onDataRequest',onDataRequest);
 app.post('/logIn',postLoginAction);
+app.post('/onDelete',onDelete);
 
 app.post('/logout',postLogoutHandler.getRequestHandler());
 
