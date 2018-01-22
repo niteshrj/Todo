@@ -64,13 +64,12 @@ const writeToFile = function(data,todo,userName){
 const onDataRequest = function(req,res){
   let userName = getUserName(req);
   let todo = req.body;
-  let title = todo['title'];
-  let description = todo['description'];
+  todo.items = [];
   let data = fs.readFileSync('./data/data.json','utf8');
   data = JSON.parse(data);
   let userTodo = data[userName];
   userTodo = JSON.stringify(userTodo);
-  if(title!='' && description!=''){
+  if(todo.title!='' && todo.description!=''){
     writeToFile(data,todo,userName);
     res.write(userTodo);
     res.end();
@@ -90,16 +89,28 @@ const onDelete = function(req,res){
   fs.writeFileSync('./data/data.json',data);
 }
 
+const addItem = function(req,res){
+  let item = req.body.item;
+  let index = req.body.index;
+  let userName = getUserName(req);
+  let data = fs.readFileSync('./data/data.json','utf8');
+  data = JSON.parse(data);
+  data[userName][index]['items'].push(item);
+  data = JSON.stringify(data,null,2);
+  fs.writeFileSync('./data/data.json',data);
+}
+
 let app = WebApp.create();
 app.use(logRequest);
 app.use(loadUser);
 app.use(redirectLoggedInUserToHome);
 app.use(redirectLoggedOutUserToLogin);
-
 app.use(compositeHandler.getRequestHandler());
+
 app.post('/onDataRequest',onDataRequest);
 app.post('/logIn',postLoginAction);
 app.post('/onDelete',onDelete);
+app.post('/addItem',addItem);
 
 app.post('/logout',postLogoutHandler.getRequestHandler());
 
