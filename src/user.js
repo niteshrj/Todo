@@ -1,4 +1,4 @@
-const Todo = require('./todo.js');
+const Todo = require('./todo.js').Todo;
 
 class User {
   constructor(name) {
@@ -7,7 +7,6 @@ class User {
   }
   addTodo(title,description){
     let todo = new Todo(title,description);
-    console.log(todo);
     this._todos.push(todo);
     return this._todos;
   }
@@ -19,6 +18,12 @@ class User {
   }
   getItems(index){
     return JSON.stringify(this._todos[index]._items);
+  }
+  deleteTodo(index){
+    this._todos.splice(index,1);
+  }
+  deleteItem(index,itemIndex){
+    this._todos[index]['_items'].splice(itemIndex,1);
   }
 }
 

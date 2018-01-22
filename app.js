@@ -75,12 +75,23 @@ const onDataRequest = function(req,res){
 const onDelete = function(req,res){
   let todoIndex = req.body.id;
   let userName = getUserName(req);
-  let data = fs.readFileSync('./data/data.json','utf8');
-  data = JSON.parse(data);
-  data[userName].splice(todoIndex,1);
-  data = JSON.stringify(data,null,2);
-  fs.writeFileSync('./data/data.json',data);
+  appLib.users[userName].deleteTodo(todoIndex);
+  let todos = appLib.users[userName].todos;
+  res.write(todos);
+  appLib.writeToFile();
+  res.end();
 }
+const deleteItem = function(req,res){
+  let todoIndex = req.body.todoIndex;
+  let itemIndex = req.body.itemIndex;
+  let userName = getUserName(req);
+  appLib.users[userName].deleteItem(todoIndex,itemIndex);
+  let items = appLib.users[userName].getItems(todoIndex);
+  res.write(items);
+  appLib.writeToFile();
+  res.end();
+}
+
 
 const addItem = function(req,res){
   let item = req.body.item;
@@ -88,6 +99,11 @@ const addItem = function(req,res){
   let userName = getUserName(req);
   appLib.users[userName].addItem(index,item);
   let items = appLib.users[userName].getItems(index);
+  if(item==""){
+    res.write(items);
+    res.end();
+    return;
+  }
   appLib.writeToFile();
   res.write(items);
   res.end();
@@ -104,6 +120,7 @@ app.use(compositeHandler.getRequestHandler());
 app.post('/onDataRequest',onDataRequest);
 app.post('/logIn',postLoginAction);
 app.post('/onDelete',onDelete);
+app.post('/deleteItem',deleteItem);
 app.post('/addItem',addItem);
 
 app.post('/logout',postLogoutHandler.getRequestHandler());

@@ -32,7 +32,6 @@ class StaticFileHandler extends DefaultHandler{
     if(!res.finished){
       try {
         data = fs.readFileSync(this.getFilePath(req.url),'utf8');
-        // console.log(`urlllll - ${this.getFilePath(req.url)}`);
       } catch (e) {
         return;
       }

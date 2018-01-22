@@ -14,7 +14,6 @@ let lib = {
   users : {},
   loadFileData : function(){
     let fileData = getAllFileData();
-    console.log(fileData);
     let users = JSON.parse(fileData);
     let usernames = Object.keys(users);
     usernames.map((username)=>{

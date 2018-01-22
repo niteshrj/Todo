@@ -18,7 +18,6 @@ class Todo{
   addItem(item){
     let newItem = new Item(item);
     this._items.push(newItem);
-    console.log(this._items);
   }
   updateTitle(newTitle){
     this._title = newTitle;

@@ -5,7 +5,12 @@ const deleteTodo = function(event){
   sendRequest(method,url,displayTodo,data);
 }
 const deleteItem = function(){
-
+  let itemIndex = event.target.className;
+  let todoIndex = document.getElementsByTagName('button')[1].id;
+  let method = 'POST';
+  let url = '/deleteItem';
+  let data = `itemIndex=${itemIndex}&todoIndex=${todoIndex}`;
+  sendRequest(method,url,displayItems,data);
 }
 const displayItems = function(){
   let data = this.responseText;
@@ -40,12 +45,17 @@ const createAddItemButton = function(){
   let input = document.createElement('INPUT');
   let button = document.createElement('BUTTON');
   button.className = className;
+  button.id = className;
   input.placeholder = 'Input Item';
   input.id = 'item';
   button.innerText = 'Add';
   button.onclick = addItem;
   document.getElementById('div').appendChild(input);
   document.getElementById('div').appendChild(button);
+  let method = 'POST';
+  let url = '/addItem';
+  let data = `item=${""}&index=${className}`;
+  sendRequest(method,url,displayItems,data);
 }
 
 const displayTodo = function(){
