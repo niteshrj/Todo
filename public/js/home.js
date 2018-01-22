@@ -4,9 +4,26 @@ const deleteTodo = function(event){
   let data = `id=${event.target.className}`;
   sendRequest(method,url,displayTodo,data);
 }
+const deleteItem = function(){
 
+}
 const displayItems = function(){
   let data = this.responseText;
+  items = JSON.parse(data);
+  let buttonId = 0;
+  items.forEach((item)=>{
+    let todoItem = document.createElement('p');
+    let br = document.createElement('br');
+    let button = document.createElement('BUTTON');
+    button.className=buttonId;
+    button.innerText = 'Delete';
+    button.onclick = deleteItem;
+    todoItem.innerText = item;
+    buttonId++;
+    document.getElementById('div').appendChild(todoItem);
+    document.getElementById('div').appendChild(button);
+    document.getElementById('div').appendChild(br);
+  })
 }
 
 const addItem = function(){
@@ -45,8 +62,8 @@ const displayTodo = function(){
     button.onclick = deleteTodo;
     title.className=buttonId;
     title.onclick = createAddItemButton;
-    title.innerText = todo.title;
-    description.innerText = todo.description;
+    title.innerText = todo._title;
+    description.innerText = todo._description;
     buttonId++;
     document.getElementById('div').appendChild(title);
     document.getElementById('div').appendChild(description);
@@ -65,10 +82,10 @@ const loadData = function(){
   sendRequest(method,url,displayTodo,data);
 }
 
-const sendRequest = function(method,url,displayTodo,data){
+const sendRequest = function(method,url,callback,data){
   let xReq = new XMLHttpRequest();
   xReq.open(method,url);
-  xReq.addEventListener('load',displayTodo);
+  xReq.addEventListener('load',callback);
   xReq.send(data);
 }
 

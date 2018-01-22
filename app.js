@@ -1,10 +1,12 @@
-let fs = require('fs');
-let WebApp = require('./webapp.js');;
-let appUtility = require('./appUtility.js');
-let registered_users = [{'userName':'Aditi','password':'1'},{'userName':'Nitesh','password':'2'}];
-let CompositeHandler = require('./handlers/compositeHandler.js');
-let StaticFileHandler = require('./handlers/staticFileHandler.js');
-let PostLogoutHandler = require('./handlers/postLogoutHandler.js');
+const fs = require('fs');
+const WebApp = require('./webapp.js');;
+const appUtility = require('./appUtility.js');
+const appLib = require('./appLib.js');
+
+const registered_users = [{'userName':'Aditi','password':'1'},{'userName':'Nitesh','password':'2'}];
+const CompositeHandler = require('./handlers/compositeHandler.js');
+const StaticFileHandler = require('./handlers/staticFileHandler.js');
+const PostLogoutHandler = require('./handlers/postLogoutHandler.js');
 
 let compositeHandler = new CompositeHandler();
 let staticFileHandler = new StaticFileHandler('public');
@@ -15,14 +17,15 @@ compositeHandler.addHandler(staticFileHandler);
 const redirectLoggedInUserToHome = (req,res)=>{
   if(req.urlIsOneOf(['/','/login.html']) && req.user) res.redirect('/home.html');
 }
+
 const redirectLoggedOutUserToLogin = (req,res)=>{
   if(req.urlIsOneOf(['/','/home.html','/logout']) && !req.user) res.redirect('/login.html');
 }
+
 let logRequest = appUtility.logRequest;
 let getContentType = appUtility.getContentType;
 let readFile = appUtility.readFile;
 let isFile = appUtility.isFile;
-
 
 let loadUser = (req,res)=>{
   let sessionid = req.cookies.sessionid;
@@ -52,30 +55,20 @@ const getUserName = function(req){
   let userName = user['userName'];
   return userName;
 }
-const writeToFile = function(data,todo,userName){
-  let parsedData = data;
-  parsedData[userName].push(todo);
-  parsedData = JSON.stringify(parsedData,null,2);
-  fs.writeFileSync('./data/data.json',parsedData);
-  data = fs.readFileSync('./data/data.json','utf8');
-  return data;
-}
 
 const onDataRequest = function(req,res){
   let userName = getUserName(req);
   let todo = req.body;
-  todo.items = [];
-  let data = fs.readFileSync('./data/data.json','utf8');
-  data = JSON.parse(data);
-  let userTodo = data[userName];
-  userTodo = JSON.stringify(userTodo);
+  let todos = appLib.users[userName].todos;
   if(todo.title!='' && todo.description!=''){
-    writeToFile(data,todo,userName);
-    res.write(userTodo);
+    appLib.users[userName].addTodo(todo.title,todo.description);
+    todos = appLib.users[userName].todos;
+    res.write(todos);
+    appLib.writeToFile();
     res.end();
     return;
   }
-  res.write(userTodo);
+  res.write(todos);
   res.end();
 }
 
@@ -93,16 +86,17 @@ const addItem = function(req,res){
   let item = req.body.item;
   let index = req.body.index;
   let userName = getUserName(req);
-  let data = fs.readFileSync('./data/data.json','utf8');
-  data = JSON.parse(data);
-  data[userName][index]['items'].push(item);
-  data = JSON.stringify(data,null,2);
-  fs.writeFileSync('./data/data.json',data);
+  appLib.users[userName].addItem(index,item);
+  let items = appLib.users[userName].getItems(index);
+  appLib.writeToFile();
+  res.write(items);
+  res.end();
 }
 
 let app = WebApp.create();
 app.use(logRequest);
 app.use(loadUser);
+app.use(appLib.loadFileData);
 app.use(redirectLoggedInUserToHome);
 app.use(redirectLoggedOutUserToLogin);
 app.use(compositeHandler.getRequestHandler());

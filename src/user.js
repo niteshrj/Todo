@@ -1,71 +1,25 @@
-let ToDoList = require('./toDoList.js');
+const Todo = require('./todo.js');
 
 class User {
-  constructor(name,password) {
-    this.name = name;
-    this.password = password;
-    this.counter = 0;
-    this.toDos = {};
+  constructor(name) {
+    this._name = name;
+    this._todos = [];
   }
-  getName(){
-    return this.name;
+  addTodo(title,description){
+    let todo = new Todo(title,description);
+    console.log(todo);
+    this._todos.push(todo);
+    return this._todos;
   }
-  getPassword(){
-    return this.password;
+  get todos(){
+    return JSON.stringify(this._todos);
   }
-  getAllToDo(){
-    return this.toDos;
+  addItem(index,item){
+    this._todos[index]['_items'].push(item);
   }
-  getCounter(){
-    return this.counter;
-  }
-  addNewToDo(title,description){
-    let newToDo = new ToDoList(title,description);
-    this.counter++;
-    this.toDos[title] = newToDo;
-  }
-  removeToDo(listId){
-    return delete this.toDos[listId];
-  }
-  getTitleOfList(listId){
-    return this.toDos[listId].getTitle();
-  }
-  getDescriptionOfList(listId){
-    return this.toDos[listId].getDescription();
-  }
-  changeTitleOfList(listId,newTitle){
-    return this.toDos[listId].changeTitle(newTitle);
-  }
-  changeDescriptionOfList(listId,newDescription){
-    return this.toDos[listId].changeDescription(newDescription);
-  }
-  getCounterOfList(listId){
-    return this.toDos[listId].getCounter();
-  }
-  getItemsOfList(listId){
-    return this.toDos[listId].getItems();
-  }
-  addItemInList(listId,objective){
-    return this.toDos[listId].addItem(objective);
-  }
-  removeItemFromList(listId,itemId){
-    return this.toDos[listId].removesItem(itemId);
-  }
-  getObjectiveOfItemInList(listId,itemId){
-    return this.toDos[listId].getObjectiveOfItem(itemId);
-  }
-  getStatusOfItemInList(listId,itemId){
-    return this.toDos[listId].getStatusOfItem(itemId);
-  }
-  changeItemObjective(listId,itemId,newObjective){
-    return this.toDos[listId].updateItemObjective(itemId,newObjective);
-  }
-  markItemDoneInList(listId,itemId){
-    return this.toDos[listId].markItemDone(itemId);
-  }
-  markItemNotDoneInList(listId,itemId){
-    return this.toDos[listId].markItemNotDone(itemId);
+  getItems(index){
+    return JSON.stringify(this._todos[index]._items);
   }
 }
 
-module.exports = User;
+exports.User = User;

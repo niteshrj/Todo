@@ -1,4 +1,5 @@
-let DefaultHandler = require('./defaultHandler.js');
+const DefaultHandler = require('./defaultHandler.js');
+const appLib = require('./../appLib');
 
 class PostLogoutHandler extends DefaultHandler{
   constructor() {

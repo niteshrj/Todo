@@ -35,8 +35,7 @@ describe('app',()=>{
   describe.skip('GET /homePage.html',()=>{
     it('if not logged in, should redirect to login page',done=>{
       request(app,{method:'GET',url:'/homePage.html'},(res)=>{
-        testHelper.status_is_ok(res);
-        testHelper.body_contains(res,'Your Existing To Do Lists');
+      testHelper.redirect()
         done();
       })
     })
