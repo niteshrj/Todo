@@ -1,8 +1,13 @@
-let chai = require('chai');
-let assert = chai.assert;
-let request = require('./requestSimulator.js');
-let th = require('./testHelper.js');
-let app = require('../app.js');
+const chai = require('chai');
+const assert = chai.assert;
+const request = require('./requestSimulator.js');
+const th = require('./testHelper.js');
+const app = require('../app.js');
+const Fs = require('./fs.js');
+let contents = require('./contents.js').dummyData();
+
+let fs = new Fs(contents)
+app.fs = fs;
 
 const getSessionId = function(res){
   return res['headers']['Set-Cookie'].split("=")[1];
@@ -95,9 +100,10 @@ describe('app',()=>{
     it('if logged in',done=>{
       request(app,{method:'POST',url:'/login',body:'name=Aditi&password=1'},res=>{
         let sessionid=getSessionId(res);
-        request(app,{method:'POST',url:'/onDataRequest',headers: {cookie:`sessionid=${sessionid}`}},res=>{
-          // th.should_be_redirected_to(res,'/home');
-          console.log(res);
+        request(app,{method:'POST',url:'/onDataRequest',body:`title=${""}&description=${""}`,headers:{cookie:`sessionid=${sessionid}`}},res=>{
+          let body = res.body;
+          body = JSON.parse(res.body);
+          assert.deepEqual(body,contents['Aditi']['_todos']);
         })
         done();
       })

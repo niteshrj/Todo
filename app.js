@@ -1,7 +1,5 @@
-const fs = require('fs');
 const WebApp = require('./webapp.js');;
 const appLib = require('./appLib.js');
-
 const registered_users = [{'userName':'Aditi','password':'1'},{'userName':'Nitesh','password':'2'}];
 const CompositeHandler = require('./handlers/compositeHandler.js');
 const StaticFileHandler = require('./handlers/staticFileHandler.js');
@@ -56,7 +54,7 @@ const onDataRequest = function(req,res){
     appLib.users[userName].addTodo(todo.title,todo.description);
     todos = appLib.users[userName].todos;
     res.write(todos);
-    appLib.writeToFile();
+    writeToFile();
     res.end();
     return;
   }
@@ -70,7 +68,7 @@ const onDelete = function(req,res){
   appLib.users[userName].deleteTodo(todoIndex);
   let todos = appLib.users[userName].todos;
   res.write(todos);
-  appLib.writeToFile();
+  writeToFile();
   res.end();
 }
 
@@ -81,7 +79,7 @@ const deleteItem = function(req,res){
   appLib.users[userName].deleteItem(todoIndex,itemIndex);
   let items = appLib.users[userName].getItems(todoIndex);
   res.write(items);
-  appLib.writeToFile();
+  writeToFile();
   res.end();
 }
 
@@ -97,15 +95,19 @@ const addItem = function(req,res){
     res.end();
     return;
   }
-  appLib.writeToFile();
+  writeToFile();
   res.write(items);
   res.end();
 }
 
 let app = WebApp.create();
-app.use(appLib.logRequest);
+let loadFileData = appLib.loadFileData.bind(app);
+// let getAllFileData = appLib.getAllFileData.bind(app);
+let writeToFile = appLib.writeToFile.bind(app);
+let logRequest = appLib.logRequest.bind(app);
+app.use(logRequest);
 app.use(loadUser);
-app.use(appLib.loadFileData);
+app.use(loadFileData);
 app.use(redirectLoggedInUserToHome);
 app.use(redirectLoggedOutUserToLogin);
 app.use(compositeHandler.getRequestHandler());
