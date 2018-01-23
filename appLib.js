@@ -7,7 +7,7 @@ const toJsonString = function(data){
 
 let lib = {
   users : {},
-  getAllFileData : function(){
+  getAllFileData : function(filePath){
     try{
       return this.fs.readFileSync('./data/data.json','utf8');
     }catch(e){

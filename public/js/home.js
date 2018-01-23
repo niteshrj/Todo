@@ -59,6 +59,7 @@ const createAddItemButton = function(){
 }
 
 const displayTodo = function(){
+  document.getElementById('div').innerHTML = "";
   let text = this.responseText;
   text = JSON.parse(text);
   let buttonId = 0;

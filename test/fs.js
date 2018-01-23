@@ -14,6 +14,8 @@ class Fs{
   readFileSync(filePath,encoding){
     if(this.existsSync(filePath) && encoding=='utf8'){
       return JSON.stringify(this._contents);
+    }else{
+      throw new Error('file not found!');
     }
   }
 }

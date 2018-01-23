@@ -103,7 +103,6 @@ const addItem = function(req,res){
 
 let app = WebApp.create();
 let loadFileData = appLib.loadFileData.bind(app);
-// let getAllFileData = appLib.getAllFileData.bind(app);
 let writeToFile = appLib.writeToFile.bind(app);
 let logRequest = appLib.logRequest.bind(app);
 app.use(logRequest);
