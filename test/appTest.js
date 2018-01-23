@@ -142,7 +142,30 @@ describe('app',()=>{
         request(app,{method:'POST',url:'/deleteItem',body:`todoIndex=0&itemIndex=2`,headers:{cookie:`sessionid=${sessionid}`}},res=>{
           let body = JSON.parse(res.body);
           contents['Aditi']['_todos'][0]['_items'].pop();
-          console.log(`body = ${JSON.stringify(body)}`);
+          assert.deepEqual(body,contents['Aditi']['_todos'][0]['_items']);
+        })
+        done();
+      })
+    })
+  })
+  describe('POST /addItem if logged in',()=>{
+    it('adds item given todo index and item',done=>{
+      request(app,{method:'POST',url:'/login',body:'name=Aditi&password=1'},res=>{
+        let sessionid=getSessionId(res);
+        request(app,{method:'POST',url:'/addItem',body:`item=hey&index=0`,headers:{cookie:`sessionid=${sessionid}`}},res=>{
+          let body = JSON.parse(res.body);
+          contents['Aditi']['_todos'][0]['_items'].push('hey');
+          assert.deepEqual(body,contents['Aditi']['_todos'][0]['_items']);
+          contents['Aditi']['_todos'][0]['_items'].pop();
+        })
+        done();
+      })
+    })
+    it('does not add item if item is empty',done=>{
+      request(app,{method:'POST',url:'/login',body:'name=Aditi&password=1'},res=>{
+        let sessionid=getSessionId(res);
+        request(app,{method:'POST',url:'/addItem',body:`item=&index=0`,headers:{cookie:`sessionid=${sessionid}`}},res=>{
+          let body = JSON.parse(res.body);
           assert.deepEqual(body,contents['Aditi']['_todos'][0]['_items']);
         })
         done();

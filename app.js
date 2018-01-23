@@ -88,14 +88,15 @@ const addItem = function(req,res){
   let item = req.body.item;
   let index = req.body.index;
   let userName = getUserName(req);
-  appLib.users[userName].addItem(index,item);
   let items = appLib.users[userName].getItems(index);
-  if(item==""){
+  if(item!=""){
+    appLib.users[userName].addItem(index,item);
+    items = appLib.users[userName].getItems(index);
+    writeToFile();
     res.write(items);
     res.end();
     return;
   }
-  writeToFile();
   res.write(items);
   res.end();
 }
