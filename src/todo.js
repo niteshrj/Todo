@@ -1,7 +1,7 @@
 const Item = require('./item.js').Item;
 
 class Todo{
-  constructor(title,description,items){
+  constructor(title,description){
     this._title = title;
     this._description = description;
     this._items = [];
@@ -11,6 +11,9 @@ class Todo{
   }
   get description(){
     return this._description;
+  }
+  getItem(index){
+    return this._items[index];
   }
   get items(){
     return this._items;
@@ -24,9 +27,6 @@ class Todo{
   }
   updateDescription(newDescription){
     this._description = newDescription;
-  }
-  updateItems(newItems){
-    this._items = newItems;
   }
   markItemDone(index){
     this._items[index].__proto__=new Item().__proto__;

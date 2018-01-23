@@ -1,6 +1,5 @@
 const fs = require('fs');
 const WebApp = require('./webapp.js');;
-const appUtility = require('./appUtility.js');
 const appLib = require('./appLib.js');
 
 const registered_users = [{'userName':'Aditi','password':'1'},{'userName':'Nitesh','password':'2'}];
@@ -15,19 +14,12 @@ let postLogoutHandler = new PostLogoutHandler();
 compositeHandler.addHandler(staticFileHandler);
 
 const redirectLoggedInUserToHome = (req,res)=>{
-  if(req.urlIsOneOf(['/','/login.html']) && req.user) res.redirect('/home.html');
+  if(req.urlIsOneOf(['/','/login']) && req.user) res.redirect('/home');
 }
-
 const redirectLoggedOutUserToLogin = (req,res)=>{
-  if(req.urlIsOneOf(['/','/home.html','/logout']) && !req.user) res.redirect('/login.html');
+  if(req.urlIsOneOf(['/','/home','/logout']) && !req.user) res.redirect('/login');
 }
-
-let logRequest = appUtility.logRequest;
-let getContentType = appUtility.getContentType;
-let readFile = appUtility.readFile;
-let isFile = appUtility.isFile;
-
-let loadUser = (req,res)=>{
+const loadUser = (req,res)=>{
   let sessionid = req.cookies.sessionid;
   let user = registered_users.find(u=>u.sessionid==sessionid);
   if(sessionid && user){
@@ -40,13 +32,13 @@ const postLoginAction = function(req,res){
   let validPassword = registered_users.find((u)=>u.password==req.body.password);
   if(!validUser || !validPassword){
     res.setHeader('Set-Cookie',`message=login Failed ; Max-Age=5`);
-    res.redirect('/login.html');
+    res.redirect('/login');
     return;
   }
   let sessionid = new Date().getTime();
   res.setHeader('Set-Cookie',`sessionid=${sessionid}`);
   validUser.sessionid = sessionid;
-  res.redirect('/home.html');
+  res.redirect('/home');
 }
 
 const getUserName = function(req){
@@ -81,6 +73,7 @@ const onDelete = function(req,res){
   appLib.writeToFile();
   res.end();
 }
+
 const deleteItem = function(req,res){
   let todoIndex = req.body.todoIndex;
   let itemIndex = req.body.itemIndex;
@@ -110,7 +103,7 @@ const addItem = function(req,res){
 }
 
 let app = WebApp.create();
-app.use(logRequest);
+app.use(appLib.logRequest);
 app.use(loadUser);
 app.use(appLib.loadFileData);
 app.use(redirectLoggedInUserToHome);
@@ -118,11 +111,9 @@ app.use(redirectLoggedOutUserToLogin);
 app.use(compositeHandler.getRequestHandler());
 
 app.post('/onDataRequest',onDataRequest);
-app.post('/logIn',postLoginAction);
+app.post('/login',postLoginAction);
 app.post('/onDelete',onDelete);
 app.post('/deleteItem',deleteItem);
 app.post('/addItem',addItem);
-
 app.post('/logout',postLogoutHandler.getRequestHandler());
-
 module.exports = app;

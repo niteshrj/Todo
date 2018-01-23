@@ -1,12 +1,14 @@
 let chai = require('chai');
 let assert = chai.assert;
 let request = require('./requestSimulator.js');
-let testHelper = require('./testHelper.js');
+let th = require('./testHelper.js');
 let app = require('../app.js');
 
-
+const getSessionId = function(res){
+  return res['headers']['Set-Cookie'].split("=")[1];
+}
 describe('app',()=>{
-  describe.skip('GET /bad',()=>{
+  describe('GET /bad',()=>{
     it('responds with 404',done=>{
       request(app,{method:'GET',url:'/bad'},(res)=>{
         assert.equal(res.statusCode,404);
@@ -17,43 +19,53 @@ describe('app',()=>{
   describe('GET /',()=>{
     it('redirects to login.html',done=>{
       request(app,{method:'GET',url:'/'},(res)=>{
-        testHelper.should_be_redirected_to(res,'/login.html');
+        th.should_be_redirected_to(res,'/login');
         assert.equal(res.body,"");
+        done();
+      })
+    })
+  })
+  describe('POST /login',()=>{
+    it('redirects to home for valid user',done=>{
+      request(app,{method:'POST',url:'/login',body:'name=Aditi&password=1'},res=>{
+        th.should_be_redirected_to(res,'/home');
+        th.should_not_have_cookie(res,'message');
+        done();
+      })
+    })
+    it('redirects to login for invalid user',done=>{
+      request(app,{method:'POST',url:'/login',body:'name=badUser&password=1'},res=>{
+        th.should_be_redirected_to(res,'/login');
         done();
       })
     })
   })
   describe('GET /login.html',()=>{
     it('it should show the login page',done=>{
-      request(app,{method:'GET',url:'/login.html'},(res)=>{
-        testHelper.status_is_ok(res);
-        testHelper.body_contains(res,'Login Here');
+      request(app,{method:'GET',url:'/login'},(res)=>{
+        th.status_is_ok(res);
+        th.body_contains(res,'Login Here');
         done();
       })
     })
   })
-  describe.skip('GET /homePage.html',()=>{
+  describe('GET /home.html',()=>{
     it('if not logged in, should redirect to login page',done=>{
-      request(app,{method:'GET',url:'/homePage.html'},(res)=>{
-      testHelper.redirect()
+      request(app,{method:'GET',url:'/home'},(res)=>{
+        th.should_be_redirected_to(res,'/login');
         done();
       })
     })
   })
-  describe.skip('GET /toDoPage.html',()=>{
-    it('it should show the toDoPage page',done=>{
-      request(app,{method:'GET',url:'/toDoPage.html'},(res)=>{
-        testHelper.status_is_ok(res);
-        testHelper.body_contains(res,'Write down your items below :-');
-        done();
-      })
-    })
-  })
-  describe.skip('GET /getAllToDo',()=>{
-    it('it should show the all ToDo of the user',done=>{
-      request(app,{method:'GET',url:'/getAllToDo'},(res)=>{
-        testHelper.status_is_ok(res);
-        done();
+  describe('POST /logout',()=>{
+    it('redirects to login page',done=>{
+      request(app,{method:'POST',url:'/login',body:'name=Aditi&password=1'},res=>{
+        let sessionid=getSessionId(res);
+        request(app,{method:'POST',url:'/logout',headers: {cookie:`sessionid=${sessionid}`}},res=>{
+          th.should_be_redirected_to(res,'/login');
+          th.should_not_have_cookie(res,'message');
+        })
+      done();
       })
     })
   })

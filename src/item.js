@@ -3,10 +3,10 @@ class Item {
     this._item = item;
     this._status = false;
   }
-  get _item(){
+  get item(){
     return this._item;
   }
-  get _status(){
+  get status(){
     return this._status;
   }
   markDone(){
@@ -17,4 +17,4 @@ class Item {
   }
 }
 
-module.exports = Item;
+exports.Item = Item;
