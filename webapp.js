@@ -34,9 +34,6 @@ const initialize = function(){
   this._handlers = {GET:{},POST:{}};
   this._preprocess = [];
 };
-const get = function(url,handler){
-  this._handlers.GET[url] = handler;
-}
 const post = function(url,handler){
   this._handlers.POST[url] = handler;
 };
@@ -70,7 +67,6 @@ let create = ()=>{
     main.call(rh,req,res)
   };
   initialize.call(rh);
-  rh.get = get;
   rh.post = post;
   rh.use = use;
   return rh;

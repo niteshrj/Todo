@@ -17,7 +17,7 @@ describe('app',()=>{
     })
   })
   describe('GET /',()=>{
-    it('redirects to login.html',done=>{
+    it('redirects to login',done=>{
       request(app,{method:'GET',url:'/'},(res)=>{
         th.should_be_redirected_to(res,'/login');
         assert.equal(res.body,"");
@@ -36,6 +36,28 @@ describe('app',()=>{
     it('redirects to login for invalid user',done=>{
       request(app,{method:'POST',url:'/login',body:'name=badUser&password=1'},res=>{
         th.should_be_redirected_to(res,'/login');
+        done();
+      })
+    })
+  })
+  describe('GET /',()=>{
+    it('if logged in,redirects to home',done=>{
+      request(app,{method:'POST',url:'/login',body:'name=Aditi&password=1'},res=>{
+        let sessionid=getSessionId(res);
+        request(app,{method:'GET',url:'/',headers: {cookie:`sessionid=${sessionid}`}},res=>{
+          th.should_be_redirected_to(res,'/home');
+        })
+        done();
+      })
+    })
+  })
+  describe('GET /login',()=>{
+    it('if logged in,redirects to home',done=>{
+      request(app,{method:'POST',url:'/login',body:'name=Aditi&password=1'},res=>{
+        let sessionid=getSessionId(res);
+        request(app,{method:'GET',url:'/login',headers: {cookie:`sessionid=${sessionid}`}},res=>{
+          th.should_be_redirected_to(res,'/home');
+        })
         done();
       })
     })
@@ -66,6 +88,18 @@ describe('app',()=>{
           th.should_not_have_cookie(res,'message');
         })
       done();
+      })
+    })
+  })
+  describe('POST /onDataRequest',()=>{
+    it('if logged in',done=>{
+      request(app,{method:'POST',url:'/login',body:'name=Aditi&password=1'},res=>{
+        let sessionid=getSessionId(res);
+        request(app,{method:'POST',url:'/onDataRequest',headers: {cookie:`sessionid=${sessionid}`}},res=>{
+          // th.should_be_redirected_to(res,'/home');
+          console.log(res);
+        })
+        done();
       })
     })
   })
