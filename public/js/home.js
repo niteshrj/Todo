@@ -13,6 +13,7 @@ const deleteItem = function(){
   sendRequest(method,url,displayItems,data);
 }
 const displayItems = function(){
+  document.getElementById('displayItem').innerHTML = "";
   let data = this.responseText;
   items = JSON.parse(data);
   let buttonId = 0;
@@ -25,9 +26,9 @@ const displayItems = function(){
     button.onclick = deleteItem;
     todoItem.innerText = item;
     buttonId++;
-    document.getElementById('div').appendChild(todoItem);
-    document.getElementById('div').appendChild(button);
-    document.getElementById('div').appendChild(br);
+    document.getElementById('displayItem').appendChild(todoItem);
+    document.getElementById('displayItem').appendChild(button);
+    document.getElementById('displayItem').appendChild(br);
   })
 }
 
